@@ -35,4 +35,9 @@ public class TaskTodoController {
   public ResponseEntity<TaskTodo> getTaskById(@PathVariable("id") long id) {
     return new ResponseEntity<>(taskTodoService.getTaskById(id), HttpStatus.OK);
   }
+
+  @PostMapping("/update/{id}")
+  public ResponseEntity<TaskTodo> updateTask(@RequestBody TaskTodo taskTodo, @PathVariable("id") long id) {
+    return new ResponseEntity<>(taskTodoService.updateTask(taskTodo, id), HttpStatus.OK);
+  }
 }

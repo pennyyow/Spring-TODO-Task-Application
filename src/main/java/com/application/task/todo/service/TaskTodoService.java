@@ -10,7 +10,6 @@ public interface TaskTodoService {
   List<TaskTodo> getAllTasks();
 
   TaskTodo getTaskById(long id);
-//  TaskTodo updateTask(TaskTodo taskTodo, long id);
-//
+  TaskTodo updateTask(TaskTodo taskTodo, long id);
 //  void deleteTask(long id);
 }
