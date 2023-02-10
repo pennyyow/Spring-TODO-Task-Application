@@ -69,4 +69,24 @@ public class TaskTodoServiceImpl implements TaskTodoService {
   public TaskTodo getTaskById(long id) {
     return taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
   }
+
+  @Override
+  public TaskTodo updateTask(TaskTodo taskTodo, long id) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ROOT);
+
+    TaskTodo task = taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
+    task.setTaskName(taskTodo.getTaskName());
+    task.setTaskDescription(taskTodo.getTaskDescription());
+    LocalDate startDate = LocalDate.parse(taskTodo.getStartDate().toString(), formatter);
+    LocalDate endDate = LocalDate.parse(taskTodo.getEndDate().toString(), formatter);
+    task.setStartDate(startDate);
+    task.setEndDate(endDate);
+    task.setStatus(taskTodo.getStatus());
+    task.setCreatedBy(taskTodo.getCreatedBy());
+    task.setUpdatedAt(LocalDateTime.now());
+
+    taskTodoRepository.save(task);
+
+    return task;
+  }
 }
