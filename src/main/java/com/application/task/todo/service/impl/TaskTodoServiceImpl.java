@@ -38,11 +38,15 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     LocalDate endDate = LocalDate.parse(taskTodo.getEndDate().toString(), formatter);
     task.setStartDate(startDate);
     task.setEndDate(endDate);
+    // Conditional statement to check for the task status
+    // status will be tagged as TODO by default
     if(taskTodo.getStatus() == null) {
       task.setStatus(Status.TODO);
     } else {
       task.setStatus(taskTodo.getStatus());
     }
+    // Conditional statement to check for the task created by field
+    // created by will be tagged Anonymous by default
     if(taskTodo.getCreatedBy() == null) {
       task.setCreatedBy(AppConstants.ANONYMOUS);
     } else {
@@ -81,12 +85,30 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     LocalDate endDate = LocalDate.parse(taskTodo.getEndDate().toString(), formatter);
     task.setStartDate(startDate);
     task.setEndDate(endDate);
-    task.setStatus(taskTodo.getStatus());
-    task.setCreatedBy(taskTodo.getCreatedBy());
+    // Conditional statement to check for the task status
+    // status will be tagged as TODO by default
+    if(taskTodo.getStatus() == null || taskTodo.getStatus().getStringValue().isEmpty()) {
+      task.setStatus(Status.TODO);
+    } else {
+      task.setStatus(taskTodo.getStatus());
+    }
+    // Conditional statement to check for the task created by field
+    // created by will be tagged as Anonymous by default
+    if(taskTodo.getCreatedBy() == null || taskTodo.getCreatedBy().isEmpty()) {
+      task.setCreatedBy(AppConstants.ANONYMOUS);
+    } else {
+      task.setCreatedBy(taskTodo.getCreatedBy());
+    }
     task.setUpdatedAt(LocalDateTime.now());
 
     taskTodoRepository.save(task);
 
     return task;
+  }
+
+  @Override
+  public void deleteTask(long id) {
+    TaskTodo task = taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
+    taskTodoRepository.delete(task);
   }
 }

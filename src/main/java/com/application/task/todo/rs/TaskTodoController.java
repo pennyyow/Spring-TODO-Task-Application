@@ -40,4 +40,10 @@ public class TaskTodoController {
   public ResponseEntity<TaskTodo> updateTask(@RequestBody TaskTodo taskTodo, @PathVariable("id") long id) {
     return new ResponseEntity<>(taskTodoService.updateTask(taskTodo, id), HttpStatus.OK);
   }
+
+  @PostMapping("/delete/{id}")
+  public ResponseEntity<String> deleteTask(@PathVariable("id") long id) {
+    taskTodoService.deleteTask(id);
+    return new ResponseEntity<>("Task successfully deleted!", HttpStatus.OK);
+  }
 }

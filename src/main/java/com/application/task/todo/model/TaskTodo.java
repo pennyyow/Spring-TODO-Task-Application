@@ -1,3 +1,4 @@
+// package model handles the table creation for the task application
 package com.application.task.todo.model;
 
 import com.application.task.todo.util.Status;
@@ -21,6 +22,8 @@ public class TaskTodo {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  // Datatype long is a primitive data type or reserved data type
+  // usually used on ids
   private long id;
 
   @Column(name = "task_name", nullable = false)
