@@ -16,8 +16,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @Service
 public class TaskTodoServiceImpl implements TaskTodoService {
+
+  private static final Logger logger = LogManager.getLogger(TaskTodoServiceImpl.class);
 
   private final TaskTodoRepository taskTodoRepository;
 
@@ -29,7 +34,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
   // createTask service contains business logic for creating a task
   @Override
   public TaskTodo createTask(TaskTodo taskTodo) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ROOT);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT, Locale.ROOT);
 
     TaskTodo task = new TaskTodo();
     task.setTaskName(taskTodo.getTaskName());
@@ -42,6 +47,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     // status will be tagged as TODO by default
     if(taskTodo.getStatus() == null) {
       task.setStatus(Status.TODO);
+      logger.info("Status has been set to default: TODO");
     } else {
       task.setStatus(taskTodo.getStatus());
     }
@@ -49,6 +55,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     // created by will be tagged Anonymous by default
     if(taskTodo.getCreatedBy() == null) {
       task.setCreatedBy(AppConstants.ANONYMOUS);
+      logger.info("Author has been set to default: Anonymous");
     } else {
       task.setCreatedBy(taskTodo.getCreatedBy());
     }
@@ -57,6 +64,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
 
     taskTodoRepository.save(task);
 
+    logger.info("New task has been created and set as " + task.getStatus().name());
     return task;
   }
 
@@ -66,18 +74,21 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     List<TaskTodo> tasks = taskTodoRepository.findAll();
     tasks.sort(Comparator.comparing(TaskTodo::getStartDate));
 
+    logger.info("Retrieved a total of " + tasks.size() + "tasks");
     return tasks;
   }
 
   @Override
   public TaskTodo getTaskById(long id) {
+    logger.debug("Retrieving task with id: " + id);
     return taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
   }
 
   @Override
   public TaskTodo updateTask(TaskTodo taskTodo, long id) {
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ROOT);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT, Locale.ROOT);
 
+    logger.debug("Updating task with id: " + id);
     TaskTodo task = taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
     task.setTaskName(taskTodo.getTaskName());
     task.setTaskDescription(taskTodo.getTaskDescription());
@@ -103,6 +114,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
 
     taskTodoRepository.save(task);
 
+    logger.info("Task with id " + id + " has been updated successfully.");
     return task;
   }
 
@@ -110,5 +122,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
   public void deleteTask(long id) {
     TaskTodo task = taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
     taskTodoRepository.delete(task);
+
+    logger.debug("Task with id: " + id + "has been deleted.");
   }
 }
