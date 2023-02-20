@@ -1,3 +1,5 @@
+// Functions
+// Overriding ToString
 package com.application.task.todo.util;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -6,8 +8,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum Status {
   TODO("TODO"),
   IN_PROGRESS("IN_PROGRESS"),
-  DONE("DONE"),
-  BLANK("");
+  DONE("DONE");
 
   private String status;
 

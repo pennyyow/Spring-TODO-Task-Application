@@ -1,3 +1,10 @@
+// Variables and Constants
+// Conditional Statements
+// Methods
+// Class Inheritance
+// Polymorphism
+// Interface vs Abstract Classes
+// == vs Equals method
 package com.application.task.todo.service.impl;
 
 import com.application.task.todo.config.TaskTodoRepository;
@@ -37,7 +44,15 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT, Locale.ROOT);
 
     TaskTodo task = new TaskTodo();
-    task.setTaskName(taskTodo.getTaskName());
+    try {
+      if(taskTodo.getTaskName().equals("")) {
+        throw new Exception("Task name should not be empty!");
+      } else {
+        task.setTaskName(taskTodo.getTaskName());
+      }
+    } catch (Exception ex) {
+      ex.printStackTrace();
+    }
     task.setTaskDescription(taskTodo.getTaskDescription());
     LocalDate startDate = LocalDate.parse(taskTodo.getStartDate().toString(), formatter);
     LocalDate endDate = LocalDate.parse(taskTodo.getEndDate().toString(), formatter);
@@ -81,6 +96,8 @@ public class TaskTodoServiceImpl implements TaskTodoService {
   @Override
   public TaskTodo getTaskById(long id) {
     logger.debug("Retrieving task with id: " + id);
+
+    // Java functional lambda expression: Zero parameter with exception body
     return taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
   }
 
@@ -89,6 +106,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT, Locale.ROOT);
 
     logger.debug("Updating task with id: " + id);
+    // Java functional lambda expression: Zero parameter with exception body
     TaskTodo task = taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
     task.setTaskName(taskTodo.getTaskName());
     task.setTaskDescription(taskTodo.getTaskDescription());
@@ -98,6 +116,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     task.setEndDate(endDate);
     // Conditional statement to check for the task status
     // status will be tagged as TODO by default
+    label1:
     if(taskTodo.getStatus() == null || taskTodo.getStatus().getStringValue().isEmpty()) {
       task.setStatus(Status.TODO);
     } else {
@@ -120,6 +139,7 @@ public class TaskTodoServiceImpl implements TaskTodoService {
 
   @Override
   public void deleteTask(long id) {
+    // Java functional lambda expression: Zero parameter with exception body
     TaskTodo task = taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
     taskTodoRepository.delete(task);
 

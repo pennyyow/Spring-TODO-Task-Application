@@ -1,3 +1,6 @@
+// Packages & Imports
+// Data Types
+// Access Modifiers
 // package model handles the table creation for the task application
 package com.application.task.todo.model;
 
