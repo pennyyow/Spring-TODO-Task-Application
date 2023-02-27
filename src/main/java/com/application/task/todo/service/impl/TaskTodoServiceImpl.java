@@ -19,13 +19,14 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Provides the implementation methods of TaskTodoService
+ */
 @Service
 public class TaskTodoServiceImpl implements TaskTodoService {
 
@@ -33,12 +34,21 @@ public class TaskTodoServiceImpl implements TaskTodoService {
 
   private final TaskTodoRepository taskTodoRepository;
 
+  /**
+   * Constructor for TaskTodoServiceImpl and
+   * initializes taskTodoRepository
+   * @param taskTodoRepository is injected for query executions
+   */
   @Autowired
   public TaskTodoServiceImpl(TaskTodoRepository taskTodoRepository) {
     this.taskTodoRepository = taskTodoRepository;
   }
 
-  // createTask service contains business logic for creating a task
+  /**
+   * Provides the business logic implementation for creating a task
+   * @param taskTodo is the request body for creating a task
+   * @return http status created for successfully created task
+   */
   @Override
   public TaskTodo createTask(TaskTodo taskTodo) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT, Locale.ROOT);
@@ -84,6 +94,13 @@ public class TaskTodoServiceImpl implements TaskTodoService {
   }
 
   // getAllTasks service contains business logic on retrieving all records
+
+  /**
+   * Provides the business logic implementation
+   * for retrieving all records
+   * @return tasks which are data retrieved from database and
+   * sorted by start date by default
+   */
   @Override
   public List<TaskTodo> getAllTasks() {
     List<TaskTodo> tasks = taskTodoRepository.findAll();
@@ -93,6 +110,12 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     return tasks;
   }
 
+  /**
+   * Provides the business logic implementation
+   * for retrieving task based on the id provided
+   * @param id is the request parameter to retrieve specific task from database
+   * @return TaskTodo record based on param id provided
+   */
   @Override
   public TaskTodo getTaskById(long id) {
     logger.debug("Retrieving task with id: " + id);
@@ -101,6 +124,14 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     return taskTodoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task", "id", id));
   }
 
+  /**
+   * Provides the business logic implementation
+   * for updating fields and records of a task
+   * @param taskTodo is the request body to get each field of the task
+   * which will be modified
+   * @param id is the request parameter to retrieve the specific task that will be updated
+   * @return TaskTodo updated record
+   */
   @Override
   public TaskTodo updateTask(TaskTodo taskTodo, long id) {
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(AppConstants.DATE_FORMAT, Locale.ROOT);
@@ -137,6 +168,12 @@ public class TaskTodoServiceImpl implements TaskTodoService {
     return task;
   }
 
+  /**
+   * Provides the business logic implementation
+   * for deleting a task
+   * @param id is the request parameter to retrieve the record from the database
+   * that will be deleted
+   */
   @Override
   public void deleteTask(long id) {
     // Java functional lambda expression: Zero parameter with exception body

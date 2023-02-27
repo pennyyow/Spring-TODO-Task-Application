@@ -14,6 +14,11 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
+/**
+ * Provides the class to create the table,
+ * column definitions, constraints of TaskTodo
+ */
 @Getter
 @Setter
 @AllArgsConstructor
